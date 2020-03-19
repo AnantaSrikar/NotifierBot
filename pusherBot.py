@@ -3,7 +3,7 @@ from subprocess import run
 from datetime import datetime
 if __name__ == "__main__":
     branch = "master"
-    minutes = 15
+    minutes = 5
     while True:
         run(['python3', 'scrapeHelperBoi.py'])
         run(['git', 'fetch'])
