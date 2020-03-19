@@ -108,7 +108,7 @@ for i in range(0,len(tmp_moh_table)):
         idx = idx + 1
 #PHARMA TECH
 try:
-    os.rmove("pharma_tech.csv")
+    os.remove("pharma_tech.csv")
     os.remove("MOHFW.csv")
     os.remove("DeccanHerald.csv")
 except:
