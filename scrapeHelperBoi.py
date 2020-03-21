@@ -26,7 +26,7 @@ def generate_dates(start_date, end_date):
 moh_url = 'https://www.mohfw.gov.in/'
 worldo_url = 'https://www.worldometers.info/coronavirus/'
 dh_url = 'https://www.deccanherald.com/national/coronavirus-india-update-state-wise-total-number-of-confirmed-cases-deaths-812987.html'
-pharma_url = 'https://docs.google.com/spreadsheets/d/1IPJW33Z9ADRBvZlqfkulEayUnYif6TrBz9GRjDfciTQ/export?format=csv&id=1IPJW33Z9ADRBvZlqfkulEayUnYif6TrBz9GRjDfciTQ&gid=0'
+#pharma_url = 'https://docs.google.com/spreadsheets/d/1IPJW33Z9ADRBvZlqfkulEayUnYif6TrBz9GRjDfciTQ/export?format=csv&id=1IPJW33Z9ADRBvZlqfkulEayUnYif6TrBz9GRjDfciTQ&gid=0'
 jhu_daily_url = 'https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_daily_reports'
 header=["Sno","State","Cases"]
 #generate_dates()
@@ -108,12 +108,11 @@ for i in range(0,len(tmp_moh_table)):
         idx = idx + 1
 #PHARMA TECH
 try:
-    os.remove("pharma_tech.csv")
     os.remove("MOHFW.csv")
     os.remove("DeccanHerald.csv")
 except:
     pass
-wget.download(pharma_url, "pharma_tech.csv")
+#wget.download(pharma_url, "pharma_tech.csv")
 # tmp_pharma_table = pd.read_csv('pharma_tech.csv')
 # pharma_table=pd.DataFrame(header)
 # for ind in range(1,len(tmp_pharma_table)):
