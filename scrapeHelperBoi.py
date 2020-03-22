@@ -36,26 +36,26 @@ jhu_daily_url = 'https://github.com/CSSEGISandData/COVID-19/tree/master/csse_cov
 header=["Sno","State","Cases"]
 #generate_dates()
 #DECCAN HERALD
-# web_response = requests.get(dh_url)
-# txt_to_parse = web_response.text
-# x = txt_to_parse.split("articleBody")
-# y = x[1].split("https://www.arcgis.com/a")[0]
-# final_string = y.split("Courtesy: DataLEADS")[1]
-# tot_cases_dh_str = re.findall(r"Total number of positive cases in India: \d+",final_string)
-# tot_death_dh_str = re.findall(r"Total deaths in India: \d+",final_string)
-# header=["Sno","State","Cases"]
-# dh_table=pd.DataFrame(header)
-# for idx, word in enumerate(states):
-# 	temp=re.findall(r"{0}: \d+".format(word),final_string)
-# 	if(len(temp)==0):
-# 		df_t=[str(idx+1),word,"0"]
-# 		dh_table=dh_table.append(pd.DataFrame(df_t))
-# 	else:
-# 		temp2=temp[0].split(":")
-# 		df_t=[str(idx+1),temp2[0],temp2[1]]
-# 		dh_table=dh_table.append(pd.DataFrame(df_t))
-# dh_tot_cases = [int(i) for i in tot_cases_dh_str[0].split() if i.isdigit()]
-# dh_tot_death = [int(i) for i in tot_death_dh_str[0].split() if i.isdigit()]
+web_response = requests.get(dh_url)
+txt_to_parse = web_response.text
+x = txt_to_parse.split("articleBody")
+y = x[1].split("https://www.arcgis.com/a")[0]
+final_string = y.split("(the list will be regularly updated)")[1]  #pdated
+tot_cases_dh_str = re.findall(r"Total number of positive cases in India: \d+",final_string)
+tot_death_dh_str = re.findall(r"Total deaths in India: \d+",final_string)
+header=["Sno","State","Cases"]
+dh_table=pd.DataFrame(header)
+for idx, word in enumerate(states):
+	temp=re.findall(r"{0}: \d+".format(word),final_string)
+	if(len(temp)==0):
+		df_t=[str(idx+1),word,"0"]
+		dh_table=dh_table.append(pd.DataFrame(df_t))
+	else:
+		temp2=temp[0].split(":")
+		df_t=[str(idx+1),temp2[0],temp2[1]]
+		dh_table=dh_table.append(pd.DataFrame(df_t))
+dh_tot_cases = [int(i) for i in tot_cases_dh_str[0].split() if i.isdigit()]
+dh_tot_death = [int(i) for i in tot_death_dh_str[0].split() if i.isdigit()]
 #Worldometer
 worldo_table = pd.read_html(worldo_url)
 worldo_df = worldo_table[0]
@@ -70,7 +70,7 @@ element_tree = lxml.html.fromstring(web_response.text)
 moh_table=element_tree.xpath('//tr/td//text()')
 moh_tot_cases=0
 moh_tot_deaths=0
-moh_table=moh_table[7:]
+moh_table=moh_table[7:]  #added
 tmp_moh_table=moh_table
 moh_table=pd.DataFrame(header)
 conf_case=0
@@ -133,7 +133,7 @@ writeForWorldo(worldometer_data)
 #print(dh_table)
 #print(pharma_table)
 moh_table.to_csv("MOHFW.csv")
-#dh_table.to_csv("DeccanHerald.csv") TODO : Both of these don't work
+dh_table.to_csv("DeccanHerald.csv")
 #in pharma remove total get total (Total)
 #jammu dh
 #cleanup
