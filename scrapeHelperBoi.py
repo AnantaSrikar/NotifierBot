@@ -65,54 +65,55 @@ worldo_tot_death = int(worldo_india_row.TotalDeaths)
 worldometer_data = 'infected : ' + str(worldo_tot_cases) + '\ndeaths : ' + str(worldo_tot_death)
 
 #MOH
-# web_response = requests.get(moh_url)
-# element_tree = lxml.html.fromstring(web_response.text)
-# moh_table=element_tree.xpath('//tr/td//text()')
-# moh_tot_cases=0
-# moh_tot_deaths=0
-# tmp_moh_table=moh_table
-# moh_table=pd.DataFrame(header)
-# conf_case=0
-# idx=1
-# for i in range(0,len(tmp_moh_table)):
-# 	if(i%6==0):
-# 		 sno=tmp_moh_table[i]
-# 	elif (i%6==1):
-# 		state_name=tmp_moh_table[i]
-# 		if(state_name=="Total number of confirmed cases in India"):
-# 			continue
-# 	elif (i%6==2):
-# 		if(state_name=="Total number of confirmed cases in India"):
-# 			continue
-# 		if(tmp_moh_table[i]=='\n        '):
-# 			tmp_moh_table[i]='0'
-# 		data_item = [str(p) for p in tmp_moh_table[i]]
-# 		conf_case = conf_case + int(data_item[0])
-# 	elif(i%6==3):
-# 		if(state_name=="Total number of confirmed cases in India"):
-# 			continue
-# 		if(tmp_moh_table[i]=='\n        '):
-# 			tmp_moh_table[i]='0'
-# 		data_item = [str(p) for p in tmp_moh_table[i]]
-# 		conf_case = conf_case + int(data_item[0])
-# 	elif(i%6==4):
-# 		if(state_name=="Total number of confirmed cases in India"):
-# 			continue
-# 		reco_case = tmp_moh_table[i]
-# 	elif(i%6==5):
-# 		if(state_name=="Union Territory of Ladakh"):
-# 			state_name="Ladakh"
-# 		if(state_name=="Union Territory of Chandigarh"):
-# 			state_name="Chandigarh"
-# 		if(state_name=="Union Territory of Jammu and Kashmir"):
-# 			state_name="Jammu and Kashmir"
-# 		if(state_name=="Total number of confirmed cases in India"):
-# 			continue
-# 		#append entry
-# 		df_t=[str(idx),state_name,str(conf_case)]
-# 		conf_case=0
-# 		moh_table=moh_table.append(pd.DataFrame(df_t))
-# 		idx = idx + 1
+web_response = requests.get(moh_url)
+element_tree = lxml.html.fromstring(web_response.text)
+moh_table=element_tree.xpath('//tr/td//text()')
+moh_tot_cases=0
+moh_tot_deaths=0
+moh_table=moh_table[7:]
+tmp_moh_table=moh_table
+moh_table=pd.DataFrame(header)
+conf_case=0
+idx=1
+for i in range(0,len(tmp_moh_table)):
+	if(i%6==0):
+		 sno=tmp_moh_table[i]
+	elif (i%6==1):
+		state_name=tmp_moh_table[i]
+		if(state_name=="Total number of confirmed cases in India"):
+			continue
+	elif (i%6==2):
+		if(state_name=="Total number of confirmed cases in India"):
+			continue
+		if(tmp_moh_table[i]=='\n        '):
+			tmp_moh_table[i]='0'
+		data_item = [str(p) for p in tmp_moh_table[i]]
+		conf_case = conf_case + int(data_item[0])
+	elif(i%6==3):
+		if(state_name=="Total number of confirmed cases in India"):
+			continue
+		if(tmp_moh_table[i]=='\n        '):
+			tmp_moh_table[i]='0'
+		data_item = [str(p) for p in tmp_moh_table[i]]
+		conf_case = conf_case + int(data_item[0])
+	elif(i%6==4):
+		if(state_name=="Total number of confirmed cases in India"):
+			continue
+		reco_case = tmp_moh_table[i]
+	elif(i%6==5):
+		if(state_name=="Union Territory of Ladakh"):
+			state_name="Ladakh"
+		if(state_name=="Union Territory of Chandigarh"):
+			state_name="Chandigarh"
+		if(state_name=="Union Territory of Jammu and Kashmir"):
+			state_name="Jammu and Kashmir"
+		if(state_name=="Total number of confirmed cases in India"):
+			continue
+		#append entry
+		df_t=[str(idx),state_name,str(conf_case)]
+		conf_case=0
+		moh_table=moh_table.append(pd.DataFrame(df_t))
+		idx = idx + 1
 try:
 	os.remove("MOHFW.csv")
 	os.remove("DeccanHerald.csv")
@@ -131,7 +132,7 @@ writeForWorldo(worldometer_data)
 #print(moh_table)
 #print(dh_table)
 #print(pharma_table)
-# moh_table.to_csv("MOHFW.csv")
+moh_table.to_csv("MOHFW.csv")
 #dh_table.to_csv("DeccanHerald.csv") TODO : Both of these don't work
 #in pharma remove total get total (Total)
 #jammu dh
