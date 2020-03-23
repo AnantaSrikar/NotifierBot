@@ -4,7 +4,7 @@
 2,Cases
 0,1
 1,Andhra Pradesh
-2,5
+2,7
 0,2
 1,Bihar
 2,2
@@ -16,16 +16,16 @@
 2,29
 0,5
 1,Gujarat
-2,18
+2,29
 0,6
 1,Haryana
-2,21
+2,26
 0,7
 1,Himachal Pradesh
 2,2
 0,8
 1,Karnataka
-2,26
+2,33
 0,9
 1,Kerala
 2,67
@@ -34,7 +34,7 @@
 2,6
 0,11
 1,Maharashtra
-2,67
+2,74
 0,12
 1,Odisha
 2,2
@@ -46,16 +46,16 @@
 2,21
 0,15
 1,Rajasthan
-2,27
+2,28
 0,16
 1,Tamil Nadu
 2,9
 0,17
 1,Telengana
-2,26
+2,32
 0,18
 1,Chandigarh
-2,5
+2,6
 0,19
 1,Jammu and Kashmir
 2,4
@@ -64,7 +64,7 @@
 2,13
 0,21
 1,Uttar Pradesh
-2,28
+2,31
 0,22
 1,Uttarakhand
 2,3
@@ -72,5 +72,5 @@
 1,West Bengal
 2,7
 0,24
-1,349 *
-2,41
+1,393
+2,40

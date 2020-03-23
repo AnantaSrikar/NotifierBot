@@ -1,2 +1,2 @@
-infected : 425
+infected : 433
 deaths : 8
