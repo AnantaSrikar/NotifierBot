@@ -1,2 +1,0 @@
-infected : 425
-deaths : 8
