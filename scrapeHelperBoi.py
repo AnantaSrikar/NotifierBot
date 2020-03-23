@@ -71,11 +71,10 @@ element_tree = lxml.html.fromstring(web_response.text)
 moh_table=element_tree.xpath('//tr/td//text()')
 moh_tot_cases=0
 moh_tot_deaths=0
-#updated:
-index = moh_table.index('SOP for Mock Drill on 22nd March 2020 for Hospital Preparedness ')
-index = index+1
+#updated: (again on 23/03)
+ind = moh_table.index('1')
 end = len(moh_table)
-moh_table=moh_table[index:end]
+moh_table=moh_table[ind:end]
 tmp_moh_table=moh_table
 moh_table=pd.DataFrame(header)
 conf_case=0
