@@ -7,6 +7,7 @@ import wget
 import pprint
 import re
 import os
+import dashboardMaker
 #for generating dates within a start and an end date
 
 def writeForWorldo(data):
@@ -34,6 +35,7 @@ def generate_dates(start_date, end_date):
 		yield start_date + timedelta(n)
 	for single_date in daterange(start_date, end_date):
 		dates_list.append(single_date.strftime("%m-%d-%Y"))
+
 #define all urls
 moh_url = 'https://www.mohfw.gov.in/'
 worldo_url = 'https://www.worldometers.info/coronavirus/'
@@ -49,7 +51,7 @@ try:
 	x = txt_to_parse.split("articleBody")
 	y = x[1].split("https://www.arcgis.com/a")[0]
 	final_string = y.split("(the list will be regularly updated)")[1]  #updated on 22/03
-	tot_cases_dh_str = re.findall(r"Total number of positive cases in India: \d+",final_string)
+	tot_cases_dh_str = re.findall(r"\d+",final_string)[0]
 	tot_death_dh_str = re.findall(r"Total deaths in India: \d+",final_string)
 	final_string = final_string.split("</strong>")[2]               #updated on 23/03
 	header=["Sno","State","Cases"]
@@ -60,12 +62,16 @@ try:
 			df_t=[str(idx+1),word,"0"]
 			dh_table=dh_table.append(pd.DataFrame(df_t))
 		else:
-			temp2=temp[0].split(":")
+			temp2=temp[0].split(": ")
 			df_t=[str(idx+1),temp2[0],temp2[1]]
 			dh_table=dh_table.append(pd.DataFrame(df_t))
-	dh_tot_cases = [int(i) for i in tot_cases_dh_str[0].split() if i.isdigit()]
-	dh_tot_death = [int(i) for i in tot_death_dh_str[0].split() if i.isdigit()]
-
+	dh_tot_cases = int(tot_cases_dh_str)
+	dh_tot_death = int(tot_death_dh_str[0].split()[-1])
+	df_t=[str(idx+2),'Total cases',str(dh_tot_cases)]
+	dh_table=dh_table.append(pd.DataFrame(df_t))
+	df_t=[str(idx+3),'Total deaths',str(dh_tot_death)]
+	dh_table=dh_table.append(pd.DataFrame(df_t))
+	
 except:
 	workingStatus[0] = False
 	pass
@@ -90,10 +96,14 @@ try:
 	moh_table=element_tree.xpath('//tr/td//text()')
 	moh_tot_cases=0
 	moh_tot_deaths=0
+	i2 = moh_table.index('Total number of confirmed cases in India')
+	moh_tot_cases = int(moh_table[i2+1].split()[0])
+	moh_tot_cases = moh_tot_cases+int(moh_table[i2+3].split()[0])
 	#updated: (again on 23/03)
 	ind = moh_table.index('1')
 	end = len(moh_table)
 	moh_table=moh_table[ind:end]
+	moh_tot_death = int(moh_table[-2])
 	tmp_moh_table=moh_table
 	moh_table=pd.DataFrame(header)
 	conf_case=0
@@ -138,6 +148,12 @@ try:
 				state_name="Chandigarh"
 			if(state_name=="Union Territory of Jammu and Kashmir"):
 				state_name="Jammu and Kashmir"
+			try:
+				if(state_name.split()[0].isdigit()):
+					state_name='Total cases'
+					conf_case=moh_tot_cases
+			except:
+				pass
 			if(state_name=="Total number of confirmed cases in India"):
 				continue
 			#append entry
@@ -145,22 +161,30 @@ try:
 			conf_case=0
 			moh_table=moh_table.append(pd.DataFrame(df_t))
 			idx = idx + 1
+	df_t=[str(idx),'Total deaths',str(moh_tot_death)]
+	moh_table=moh_table.append(pd.DataFrame(df_t))
 except:
 	workingStatus[2] = False
 	pass
-for i in range(3):
-	if(workingStatus[i]):
-		try:
-			os.remove(fileDict[i])
-		except:
-			pass
-	# else:
-	# 	print("{} is not working, no need to try".format(fileDict[i]))
 
+# for i in range(3):
+# 	if(workingStatus[i]):
+# 		try:
+# 			os.remove(fileDict[i])
+# 		except:
+# 			pass
+# 	else:
+# 		print("{} is not working, no need to try".format(fileDict[i]))
 
 writeForWorldo(worldometer_data)
 moh_table.to_csv("MOHFW.csv")
 dh_table.to_csv("DeccanHerald.csv")
+
+dashboardMaker.generateTable()
+
+for i in range(3):
+	os.remove(fileDict[i])
+
 # TODO : put the write function at the if statement
 
 #PHARMA TECH
