@@ -40,9 +40,10 @@ web_response = requests.get(dh_url)
 txt_to_parse = web_response.text
 x = txt_to_parse.split("articleBody")
 y = x[1].split("https://www.arcgis.com/a")[0]
-final_string = y.split("(the list will be regularly updated)")[1]  #pdated
+final_string = y.split("(the list will be regularly updated)")[1]  #updated on 22/03
 tot_cases_dh_str = re.findall(r"Total number of positive cases in India: \d+",final_string)
 tot_death_dh_str = re.findall(r"Total deaths in India: \d+",final_string)
+final_string = final_string.split("</strong>")[2]               #updated on 23/03
 header=["Sno","State","Cases"]
 dh_table=pd.DataFrame(header)
 for idx, word in enumerate(states):
@@ -75,7 +76,6 @@ index = moh_table.index('SOP for Mock Drill on 22nd March 2020 for Hospital Prep
 index = index+1
 end = len(moh_table)
 moh_table=moh_table[index:end]
-#moh_table=moh_table[10:]  #added (also updated 2nd time)
 tmp_moh_table=moh_table
 moh_table=pd.DataFrame(header)
 conf_case=0
@@ -93,6 +93,10 @@ for i in range(0,len(tmp_moh_table)):
 		if(tmp_moh_table[i]=='\n        '):
 			tmp_moh_table[i]='0'
 		data_item = [str(p) for p in tmp_moh_table[i]]
+		try:                                            #added this block
+			data_item[0]=data_item[0]+data_item[1]
+		except:
+			pass
 		conf_case = conf_case + int(data_item[0])
 	elif(i%6==3):
 		if(state_name=="Total number of confirmed cases in India"):
@@ -100,6 +104,10 @@ for i in range(0,len(tmp_moh_table)):
 		if(tmp_moh_table[i]=='\n        '):
 			tmp_moh_table[i]='0'
 		data_item = [str(p) for p in tmp_moh_table[i]]
+		try:                                            #added this block
+			data_item[0]=data_item[0]+data_item[1]
+		except:
+			pass
 		conf_case = conf_case + int(data_item[0])
 	elif(i%6==4):
 		if(state_name=="Total number of confirmed cases in India"):
