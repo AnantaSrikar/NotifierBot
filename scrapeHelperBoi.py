@@ -7,8 +7,16 @@ import wget
 import pprint
 import re
 import os
+import argparse
 import dashboardMaker
 #for generating dates within a start and an end date
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-v', '--verbose', action='store_true', help='This code will help the scrapBois notified of the new cases')
+args = parser.parse_args()
+
+if (args.verbose):
+	print('Fetching data...')
 
 def writeForWorldo(data):
 	fileManager = open('Worldometer.txt', 'w')
@@ -46,6 +54,8 @@ header=["Sno","State","Cases"]
 #generate_dates()
 #DECCAN HERALD
 try:
+	if(args.verbose):
+		print('Trying to get data from Deccan Herald')
 	web_response = requests.get(dh_url)
 	txt_to_parse = web_response.text
 	x = txt_to_parse.split("articleBody")
@@ -73,11 +83,15 @@ try:
 	dh_table=dh_table.append(pd.DataFrame(df_t))
 	
 except:
+	if(args.verbose):
+		print('Failed to get data from Deccan Herald')
 	workingStatus[0] = False
 	pass
 
 #Worldometer
 try:
+	if(args.verbose):
+		print('Trying to get data from Worldometer')
 	worldo_table = pd.read_html(worldo_url)
 	worldo_df = worldo_table[0]
 	worldo_india_row = worldo_df.loc[worldo_df['Country,Other'] == 'India']
@@ -86,11 +100,15 @@ try:
 	worldometer_data = 'infected : ' + str(worldo_tot_cases) + '\ndeaths : ' + str(worldo_tot_death)
 
 except:
+	if(args.verbose):
+		print('Failed to get data from Worldometer')
 	workingStatus[1] = False
 	pass
 
-#MOH
+#MOHFW
 try:
+	if(args.verbose):
+		print('Trying to get data from MOHFW')
 	web_response = requests.get(moh_url)
 	element_tree = lxml.html.fromstring(web_response.text)
 	moh_table=element_tree.xpath('//tr/td//text()')
@@ -163,7 +181,10 @@ try:
 			idx = idx + 1
 	df_t=[str(idx),'Total deaths',str(moh_tot_death)]
 	moh_table=moh_table.append(pd.DataFrame(df_t))
+
 except:
+	if(args.verbose):
+		print('Failed to get data from MOHFW')
 	workingStatus[2] = False
 	pass
 
@@ -176,14 +197,26 @@ except:
 # 	else:
 # 		print("{} is not working, no need to try".format(fileDict[i]))
 
+if(args.verbose):
+	print('Updating all the gathered data')
+
 writeForWorldo(worldometer_data)
 moh_table.to_csv("MOHFW.csv")
 dh_table.to_csv("DeccanHerald.csv")
 
+if(args.verbose):
+	print('Done updating data\nMaking dashboard')
+
 dashboardMaker.generateTable()
+
+if(args.verbose):
+	print('Dashboard made successfully\nRemoving temporary files now')
 
 for i in range(3):
 	os.remove(fileDict[i])
+
+if(args.verbose):
+	print('Done removing temporary files. Have fun!')
 
 # TODO : put the write function at the if statement
 
