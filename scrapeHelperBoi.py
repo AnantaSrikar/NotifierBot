@@ -118,7 +118,7 @@ try:
 		elif (i%6==2):
 			if(state_name=="Total number of confirmed cases in India"):
 				continue
-			if(tmp_moh_table[i]=='\n        '):
+			if(tmp_moh_table[i]=='\r\n        '):   #updated 24/03
 				tmp_moh_table[i]='0'
 			data_item = [str(p) for p in tmp_moh_table[i]]
 			try:                                            #added this block
@@ -129,7 +129,7 @@ try:
 		elif(i%6==3):
 			if(state_name=="Total number of confirmed cases in India"):
 				continue
-			if(tmp_moh_table[i]=='\n        '):
+			if(tmp_moh_table[i]=='\r\n        '):   #updated 24/03
 				tmp_moh_table[i]='0'
 			data_item = [str(p) for p in tmp_moh_table[i]]
 			try:                                            #added this block
