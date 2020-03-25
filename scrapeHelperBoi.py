@@ -121,7 +121,7 @@ try:
 	ind = moh_table.index('1')
 	end = len(moh_table)
 	moh_table=moh_table[ind:end]
-	moh_tot_death = int(moh_table[-2])
+	moh_tot_death = int(moh_table[-2].split('#')[0])        #updated on 25/03
 	tmp_moh_table=moh_table
 	moh_table=pd.DataFrame(header)
 	conf_case=0
@@ -154,7 +154,7 @@ try:
 				data_item[0]=data_item[0]+data_item[1]
 			except:
 				pass
-			conf_case = conf_case + int(data_item[0])
+			conf_case = conf_case + int(data_item[0].split('#')[0]) #updated on 25/03
 		elif(i%6==4):
 			if(state_name=="Total number of confirmed cases in India"):
 				continue
