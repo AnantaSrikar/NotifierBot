@@ -81,12 +81,13 @@ try:
 	dh_table=dh_table.append(pd.DataFrame(df_t))
 	df_t=[str(idx+3),'Total deaths',str(dh_tot_death)]
 	dh_table=dh_table.append(pd.DataFrame(df_t))
-	
-except:
 	if(args.verbose):
-		print('Failed to get data from Deccan Herald')
+		print('Data successfully fetched from Deccan Herald\n')
+	
+except Exception as e:
+	if(args.verbose):
+		print('Failed to get data from Deccan Herald, Error : {}'.format(e))
 	workingStatus[0] = False
-	pass
 
 #Worldometer
 try:
@@ -98,12 +99,13 @@ try:
 	worldo_tot_cases = int(worldo_india_row.TotalCases)
 	worldo_tot_death = int(worldo_india_row.TotalDeaths) 
 	worldometer_data = 'infected : ' + str(worldo_tot_cases) + '\ndeaths : ' + str(worldo_tot_death)
-
-except:
 	if(args.verbose):
-		print('Failed to get data from Worldometer')
+		print('Data successfully fetched from Worldometer\n')
+
+except Exception as e:
+	if(args.verbose):
+		print('Failed to get data from Worldometer, Error : {}'.format(e))
 	workingStatus[1] = False
-	pass
 
 #MOHFW
 try:
@@ -181,12 +183,13 @@ try:
 			idx = idx + 1
 	df_t=[str(idx),'Total deaths',str(moh_tot_death)]
 	moh_table=moh_table.append(pd.DataFrame(df_t))
-
-except:
 	if(args.verbose):
-		print('Failed to get data from MOHFW')
+		print('Data successfully fetched from MOHFW\n')
+	
+except Exception as e:
+	if(args.verbose):
+		print('Failed to get data from MOHFW, Error : {}'.format(e))
 	workingStatus[2] = False
-	pass
 
 # for i in range(3):
 # 	if(workingStatus[i]):
@@ -197,23 +200,44 @@ except:
 # 	else:
 # 		print("{} is not working, no need to try".format(fileDict[i]))
 
+try:
+	if(args.verbose):
+		print('Updating all the gathered data')	
+	writeForWorldo(worldometer_data)
+	moh_table.to_csv("MOHFW.csv")
+	dh_table.to_csv("DeccanHerald.csv")
+	if(args.verbose):
+		print('Data updation successfully done\n')
+
+except Exception as e:
+	if(args.verbose):
+		print("Coudn't gather data properly, Error : {}".format(e))
+
 if(args.verbose):
-	print('Updating all the gathered data')
+	print('Making dashboard')
 
-writeForWorldo(worldometer_data)
-moh_table.to_csv("MOHFW.csv")
-dh_table.to_csv("DeccanHerald.csv")
+try:
+	if(args.verbose):
+		print('Going into dashboardMaker.py\n')
+	dashboardMaker.generateTable()
+	if(args.verbose):
+		print('\nDashboard updated successfully!')
+
+except Exception as e:
+	if(args.verbose):
+		print("\nFailed to update dashboard, Error : {}".format(e))
 
 if(args.verbose):
-	print('Done updating data\nMaking dashboard')
-
-dashboardMaker.generateTable()
-
-if(args.verbose):
-	print('Dashboard made successfully\nRemoving temporary files now')
+	print('Removing temporary files now')
 
 for i in range(3):
-	os.remove(fileDict[i])
+	try:
+		os.remove(fileDict[i])
+		if(args.verbose):
+			print('Removed {} successfully!'.format(fileDict[i]))
+	except Exception as e:
+		if(args.verbose):
+			print('Failed to remove {}, Error : {}'.format(fileDict[i], e))
 
 if(args.verbose):
 	print('Done removing temporary files. Have fun!')
