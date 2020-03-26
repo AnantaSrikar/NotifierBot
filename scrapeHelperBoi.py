@@ -117,12 +117,13 @@ try:
 	moh_tot_cases=0
 	moh_tot_deaths=0
 	i2 = moh_table.index('Total number of confirmed cases in India')
-	moh_tot_cases = int(moh_table[i2+1].split()[0])
+	moh_tot_cases = int(moh_table[i2+1].split('#')[0])      #updated on 26/03
 	moh_tot_cases = moh_tot_cases+int(moh_table[i2+3].split()[0])
 	#updated: (again on 23/03)
 	ind = moh_table.index('1')
 	end = len(moh_table)
 	moh_table=moh_table[ind:end]
+	moh_table=moh_table[0:-1]                               #updated on 26/03
 	moh_tot_death = int(moh_table[-2].split('#')[0])        #updated on 25/03
 	tmp_moh_table=moh_table
 	moh_table=pd.DataFrame(header)
@@ -169,7 +170,7 @@ try:
 			if(state_name=="Union Territory of Jammu and Kashmir"):
 				state_name="Jammu and Kashmir"
 			try:
-				if(state_name.split()[0].isdigit()):
+				if(state_name.split('#')[0].isdigit()): #updated on 26/03
 					state_name='Total cases'
 					conf_case=moh_tot_cases
 			except:
