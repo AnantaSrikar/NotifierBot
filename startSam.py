@@ -18,7 +18,7 @@ def updateTweetsInfected():
 	for tweet in public_tweets:
 		# print((tweet.author.name))
 		# print('Tweet : {}\n\n'.format(tweet.text))
-		if('COVID-19' in tweet.text or 'Covid19' in tweet.text or 'positive' in tweet.text):
+		if('COVID-19' in tweet.text or 'Covid19' in tweet.text or 'positive' in tweet.text or 'new case' in tweet.text):#new could give bs
 			try:
 				tweet.retweet()
 			except Exception as e:
