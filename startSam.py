@@ -15,7 +15,7 @@ api = tweepy.API(auth, wait_on_rate_limit = True)
 
 def checkCase(text):
 	text = text.lower()
-	return (('covid' in text) and ('positive' in text or 'new cases' in text or 'dead' in text or 'death' in text or 'deaths' in text or 'passed away' in text or 'dies' in text) and ('cure' not in text))
+	return (('covid' in text) and ('positive' in text or 'new cases' in text or 'dead' in text or 'death' in text or 'deaths' in text or 'passed away' in text or 'dies' in text or 'bulletin' in text) and ('cure' not in text))
 
 def updateTweetsInfected():
 	public_tweets = api.home_timeline()
