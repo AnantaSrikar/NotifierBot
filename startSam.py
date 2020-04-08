@@ -34,6 +34,7 @@ def updateTweetsInfected():
 # api.update_status(tweetText))
 
 def main():
+	print('Sam is up!')
 	while True:
 		updateTweetsInfected()
 		time.sleep(60 * minutes)
